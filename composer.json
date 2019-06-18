@@ -1,0 +1,20 @@
+{
+    "name": "pdima88/icms2pay",
+    "description": "Pay component for InstantCMS 2",
+    "type": "library",
+    "require": {        
+        "pdima88/icms2ext": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Puchkin Dmitriy",
+            "email": "pdima88@mail.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "pdima88\\icms2pay\\": "/src"
+        }
+    } 
+}
