@@ -2,6 +2,8 @@
 
 namespace pdima88\icms2pay;
 
+use cmsBackend;
+
 class backend extends cmsBackend {
    
     public $useDefaultOptionsAction = true;

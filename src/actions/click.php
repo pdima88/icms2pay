@@ -2,15 +2,17 @@
 
 namespace pdima88\icms2pay\actions;
 
+use cmsCore;
 use pdima88\icms2ext\Model;
 use pdima88\icms2ext\Table;
-
-require_once __DIR__."/base.php";
-
+use Exception;
+use cmsConfig;
+use fieldString;
+use fieldNumber;
 /**
  * @property modelPay $model;
  */
-class click extends actionPayBase {
+class click extends base {
 
     const ACTION_PREPARE = 0;
     const ACTION_COMPLETE = 1;
@@ -24,6 +26,7 @@ class click extends actionPayBase {
     protected $checkoutUri = 'https://my.click.uz/services/pay';
 
     protected function loadOptions() {
+        if (!($this->options['click_on'] ?? false)) cmsCore::error404();
         $this->merchantId = $this->options['click_merchantid'];
         $this->serviceId = $this->options['click_serviceid'];
         $this->secretKey = $this->options['click_secretkey'];

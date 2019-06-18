@@ -5,6 +5,7 @@ namespace pdima88\icms2pay\tables;
 use pdima88\icms2ext\Table;
 use cmsUser;
 use cmsModel;
+use Zend_Db_Table_Row_Abstract;
 
 /**
  * Class payInvoice
@@ -86,13 +87,13 @@ class row_invoice extends Zend_Db_Table_Row_Abstract {
 
 
  *
- * @method static payInvoice getById($id) Возвращает заказ по ID
- * @method payInvoice createRow(array $data = [], $defaultSource = null)
+ * @method static row_invoice getById($id) Возвращает заказ по ID
+ * @method row_invoice createRow(array $data = [], $defaultSource = null)
  */
 class table_invoices extends Table {
     protected $_name = 'pay_invoices';
 
-    protected $_rowClass = 'payInvoice';
+    protected $_rowClass = __NAMESPACE__.'\\row_invoice';
 
     protected $_primary = ['id'];
 
@@ -104,7 +105,7 @@ class table_invoices extends Table {
         ]
     ];
 
-    const FK_USER = 'pdima88\\icms2pay\\tables\\Invoices.User';
+    const FK_USER = 'pdima88\\icms2pay\\tables\\table_invoices.User';
 
     /**
      * Creates new invoice for current user

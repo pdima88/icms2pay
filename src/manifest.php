@@ -11,5 +11,7 @@ class manifest
         );
     }
 
-
+    function getRootPath() {
+        return realpath(dirname(__FILE__).'/..');
+    }
 }

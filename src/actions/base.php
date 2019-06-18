@@ -2,6 +2,10 @@
 
 namespace pdima88\icms2pay\actions;
 
+use cmsAction;
+use cmsCore;
+use cmsUser;
+
 /**
  * @property modelPay $model
  */

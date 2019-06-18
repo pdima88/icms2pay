@@ -2,9 +2,9 @@
 
 namespace pdima88\icms2pay\actions;
 
-require_once __DIR__."/base.php";
+use fieldString;
 
-class receipt extends actionPayBase {
+class receipt extends base {
 
     public function options() {
         $options = array(

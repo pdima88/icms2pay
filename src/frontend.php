@@ -111,7 +111,7 @@ class frontend extends cmsFrontend {
             $paySystemOptions = [];
             $paySystemSortOrder = [];
 
-            $systems = files_tree_to_array('system/controllers/pay/actions/');
+            $systems = files_tree_to_array(realpath(__DIR__.'/actions'));
             if ($systems) {
                 foreach ($systems as $value) {
                     $value = str_replace('.php', '', $value);

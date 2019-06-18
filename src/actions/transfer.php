@@ -1,8 +1,10 @@
 <?php
 
-require_once __DIR__."/base.php";
+namespace pdima88\icms2pay\actions;
 
-class transfer extends actionPayBase {
+use fieldString;
+
+class transfer extends base {
 
     public function options() {
         $options = array(

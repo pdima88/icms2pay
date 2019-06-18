@@ -4,13 +4,13 @@ namespace pdima88\icms2pay\actions;
 
 use pdima88\icms2ext\Model;
 use pdima88\icms2ext\Table;
-
-require_once __DIR__."/base.php";
-
+use Exception;
+use fieldString;
+use fieldCheckbox;
 /**
  * @property modelPay $model;
  */
-class payme extends actionPayBase {
+class payme extends base {
 
     protected $isTestMode = false;
     protected $merchantId = '';
