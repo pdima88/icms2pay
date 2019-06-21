@@ -6,8 +6,6 @@ class manifest
     function hooks()
     {
         return array(
-            'hooks' => array(
-            )
         );
     }
 
