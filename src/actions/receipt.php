@@ -3,6 +3,7 @@
 namespace pdima88\icms2pay\actions;
 
 use fieldString;
+use cmsTemplate;
 
 class receipt extends base {
 

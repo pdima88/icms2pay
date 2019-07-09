@@ -51,7 +51,7 @@ class base extends cmsAction {
             return $this->payment($invoice);
         }
         else if ($do == 'options') {
-            if (!cmsUser::isAdmin()) cmsCore::error404();
+            //if (!cmsUser::isAdmin()) cmsCore::error404();
             return $this->options();
         }
         else {

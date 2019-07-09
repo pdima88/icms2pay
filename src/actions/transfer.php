@@ -3,6 +3,7 @@
 namespace pdima88\icms2pay\actions;
 
 use fieldString;
+use cmsTemplate;
 
 class transfer extends base {
 
@@ -39,16 +40,16 @@ class transfer extends base {
     public function payment($invoice)
     {
         $options = $this->controller->options;
-        $receipt = [];
+        $transfer = [];
         foreach ($options as $name => $value) {
-            if (string_starts($name, 'receipt_')) {
-                $receipt[string_trim($name, 'receipt_')] = $value;
+            if (string_starts($name, 'transfer_')) {
+                $transfer[string_trim($name, 'transfer_')] = $value;
             }
         }
 
-        cmsTemplate::getInstance()->render('receipt', [
+        cmsTemplate::getInstance()->render('transfer', [
             'invoice' => $invoice,
-            'receipt' => $receipt
+            'transfer' => $transfer
         ]);
     }
 }

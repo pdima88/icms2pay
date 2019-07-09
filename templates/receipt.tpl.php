@@ -31,8 +31,8 @@ $t = new Translate('pay:receipt_');
     $receipt['address'] = '1';
     $receipt['phone'] = '1';
     $receipt['chief'] = '1';
-    $this->renderChild('transfer', ['invoice' => $invoice, 'transfer' => $receipt]);
-    echo $t->prefix;
+
+
     ?>
             <br>
 

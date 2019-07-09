@@ -10,7 +10,7 @@ use cmsCore;
 
 /**
  * Class pay
- * @property modelPay $model
+ * @property model $model
  */
 class frontend extends cmsFrontend {
 
@@ -105,6 +105,7 @@ class frontend extends cmsFrontend {
     }
 
     function getPayTypes() {
+        $payController = self::getInstance();
         $res = $this->model->getCachedResult(self::CACHE_PAYTYPES);
         if (!isset($res)) {
             $res = [];
@@ -116,7 +117,7 @@ class frontend extends cmsFrontend {
                 foreach ($systems as $value) {
                     $value = str_replace('.php', '', $value);
                     if (in_array($value, array('base', 'pay'))) continue;
-                    $paySystemOptions[$value] = cmsCore::getController('pay')->runExternalAction($value, array('options'));
+                    $paySystemOptions[$value] = $payController->runExternalAction($value, array('options'));
                     $paySystemSortOrder[$value] = $this->options[$value . '_order'] ?? 0;
                 }
             }
