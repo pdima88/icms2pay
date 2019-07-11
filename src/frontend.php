@@ -7,6 +7,10 @@ use cmsFrontend;
 use cmsUser;
 use cmsTemplate;
 use cmsCore;
+use pdima88\icms2pay\model;
+use pdima88\icms2ext\Table;
+use pdima88\icms2ext\GridHelper;
+use pdima88\icms2pay\tables\table_invoices;
 
 /**
  * Class pay
@@ -80,7 +84,7 @@ class frontend extends cmsFrontend {
     public function actionAdmin() {
         if (!cmsUser::isAllowed('pay','admin')) cmsCore::error404();
 
-        $grid = new Grid($this->model->getInvoicesGrid());
+        $grid = new Grid($this->getInvoicesGrid());
 
         if ($this->request->has('export')) {
             $grid->export('csv', 'Счета на оплату', 'invoices', true);
@@ -102,6 +106,124 @@ class frontend extends cmsFrontend {
 
     public function setPaid() {
         if (!cmsUser::isAllowed('pay','admin')) cmsCore::error404();
+    }
+
+    public function getInvoicesGrid() {
+
+        $statusList = model::$invoiceStatusList;
+        $payTypes = $this->getPayTypeList(false);
+
+        $select = $this->model->invoices->selectAs('i')->joinBy(table_invoices::FK_USER, 'u')
+            ->columns([
+                'i.*',
+                'u.nickname',
+                'u.email',
+                'u.phone'
+            ]);
+
+        $grid = [
+            'id' => 'invoices',
+            'select' => $select,
+            'sort' => [
+                'id' => 'desc',
+            ],
+
+            'rownum' => false,
+
+            'multisort' => true,
+            'paging' => 10,
+
+            'url' => cmsCore::getInstance()->uri_absolute,
+            'ajax' => cmsCore::getInstance()->uri_absolute,
+            'actions' => GridHelper::getActions([
+                    'edit' => [
+                        'title' => 'Изменить',
+                        'href'  => href_to('admin', 'controllers', ['edit', 'pay', 'tariffs_edit', '{id}']) . '?back={returnUrl}'
+                    ],
+                    'delete' => [
+                        'title' => 'Удалить',
+                        'href' => '',
+                        'confirmDelete' => true,
+                    ]
+            ]),
+            'delete' => href_to('admin', 'controllers', ['edit', 'pay', 'tariffs_delete', '{id}']). '?back={returnUrl}',
+            'columns' => [
+                'id' => [
+                    'title' => '№ счета',
+                    'width' => 70,
+                    'sort' => true,
+                    'filter' => 'equal',
+                    'align' => 'right',
+                ],
+                'user_id' => [
+                    'title' => 'ID польз.',
+                    'width' => 70,
+                    'sort' => true,
+                    'filter' => 'equal',
+                    'align' => 'center'
+                ],
+                'nickname' => [
+                    'title' => 'Ф.И.О. пользователя',
+                    'sort' => true,
+                    'filter' => 'text',
+                ],
+                'email' => [
+                    'title' => 'E-mail',
+                    'sort' => true,
+                    'filter' => 'text',
+                ],
+                'phone' => [
+                    'title' => 'Номер телефона',
+                    'sort' => true,
+                    'filter' => 'text',
+                ],
+                'title' => [
+                    'title' => 'Наименование счета',
+                    'sort' => true,
+                    'filter' => 'text'
+                ],
+                'amount' => [
+                    'title' => 'Сумма',
+                    'format' => 'format_currency',
+                    'align' => 'right',
+                    'sort' => true,
+                    'filter' => 'equal',
+                    'style' => 'font-weight:bold',
+                ],
+                'status' => [
+                    'title' => 'Статус',
+                    'sort' => true,
+                    'filter' => 'multiselect',
+                    'format' => $statusList
+                ],
+                'date_created' => [
+                    'title' => 'Когда создан',
+                    'sort' => true,
+                    'filter' => 'dateRange',
+                    'filterOpens' => 'left',
+                    'format' => 'datetime',
+                ],
+                'date_paid' => [
+                    'title' => 'Когда оплачен',
+                    'sort' => true,
+                    'format' => 'datetime',
+                    'filter' => 'dateRange',
+                    'filterOpens' => 'left',
+                ],
+                'pay_type' => [
+                    'title' => 'Тип оплаты',
+                    'sort' => true,
+                    'filter' => 'select',
+                    'format' => $payTypes,
+                ],
+                'pay_info' => [
+                    'title' => 'Сведения о платеже',
+                    'filter' => 'text',
+                ],
+            ]
+        ];
+
+        return $grid;
     }
 
     function getPayTypes() {

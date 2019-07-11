@@ -5,6 +5,7 @@ namespace pdima88\icms2pay\backend\actions;
 use cmsAction;
 use cmsTemplate;
 use pdgrid\Grid;
+use pdima88\icms2pay\frontend;
 
 /**
  * @property modelPay $model
@@ -13,7 +14,7 @@ class invoices extends cmsAction {
 
     public function run() {
 
-        $grid = new Grid($this->model->getInvoicesGrid());
+        $grid = new Grid(frontend::getInstance()->getInvoicesGrid());
 
         if ($this->request->has('export')) {
             $grid->export('csv', 'Счета на оплату', 'invoices', true);

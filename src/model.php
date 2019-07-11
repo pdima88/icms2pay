@@ -9,10 +9,11 @@ use cmsCore;
 use cmsDatabase;
 use cmsEventsManager;
 use Exception;
+use pdima88\icms2pay\tables\table_invoices;
 
 /**
  * Class modelPay
- * @property tablePay_Invoices $invoices
+ * @property table_invoices $invoices
  */
 class model extends BaseModel {
     
@@ -24,112 +25,20 @@ class model extends BaseModel {
     const INVOICE_STATUS_CANCELLED = 3;
     const INVOICE_STATUS_DELETED = -1;
 
+    static $invoiceStatusList = [
+        self::INVOICE_STATUS_CREATED => 'Не оплачен',
+        self::INVOICE_STATUS_PAID => 'Оплачен',
+        self::INVOICE_STATUS_ERROR => 'Ошибка',
+        self::INVOICE_STATUS_CANCELLED => 'Отменен',
+        self::INVOICE_STATUS_DELETED => 'Удален'
+    ];
+
     function __get($name)
     {
         if ($name == 'invoices') {
             return $this->getTable($name);
         }
         throw new Exception('Unknown property '.$name);
-    }
-
-    function getInvoicesGrid() {
-
-        $select = BaseModel::zendDbSelect()->from(Table::prefix(self::TABLE_INVOICES));
-
-        $grid = [
-            'id' => 'invoices',
-            'select' => $select,
-            'sort' => [
-                'id' => 'desc',
-            ],
-
-            'rownum' => false,
-
-            'multisort' => true,
-            'paging' => 15,
-
-            'url' => cmsCore::getInstance()->uri_absolute,
-            'ajax' => cmsCore::getInstance()->uri_absolute,
-            'actions' => GridHelper::getActions([
-                    'edit' => [
-                        'title' => 'Изменить',
-                        'href'  => href_to('admin', 'controllers', ['edit', 'pay', 'tariffs_edit', '{id}']) . '?back={returnUrl}'
-                    ],
-                    'delete' => [
-                        'title' => 'Удалить',
-                        'href' => '',
-                        'confirmDelete' => true,
-                    ]
-            ]),
-            'delete' => href_to('admin', 'controllers', ['edit', 'pay', 'tariffs_delete', '{id}']). '?back={returnUrl}',
-            'columns' => [
-                'id' => [
-                    'title' => '№ счета',
-                    'width' => 70,
-                    'sort' => true,
-                    'filter' => 'equal'
-                ],
-                'user_id' => [
-                    'title' => 'ID польз.',
-                    'width' => 70,
-                    'sort' => true,
-                    'filter' => 'equal'
-                ],
-                'fullname' => [
-                    'title' => 'Ф.И.О. пользователя',
-                    'sort' => true,
-                    'filter' => 'text',
-                ],
-                'email' => [
-                    'title' => 'E-mail',
-                    'sort' => true,
-                    'filter' => 'text',
-                ],
-                'phone' => [
-                    'title' => 'Номер телефона',
-                    'sort' => true,
-                    'filter' => 'text',
-                ],
-                'title' => [
-                    'title' => 'Наименование счета',
-                    'sort' => true,
-                    'filter' => 'text'
-                ],
-                'amount' => [
-                    'title' => 'Сумма',
-                    'sort' => true,
-                    'filter' => 'equal'
-                ],
-                'status' => [
-                    'title' => 'Статус',
-                    'sort' => true,
-                    'filter' => 'multiselect',
-                ],
-                'date_add' => [
-                    'title' => 'Когда создан',
-                    'sort' => true,
-                    'filter' => 'dateRange',
-                    'filterOpens' => 'left',
-                ],
-                'date_paid' => [
-                    'title' => 'Когда оплачен',
-                    'sort' => true,
-                    'filter' => 'dateRange',
-                    'filterOpens' => 'left',
-                ],
-                'pay_system' => [
-                    'title' => 'Тип оплаты',
-                    'sort' => true,
-                    'filter' => 'select'
-                ],
-                'pay_info' => [
-                    'title' => 'Сведения о платеже',
-                    'filter' => 'text',
-                ],
-            ]
-        ];
-
-        return $grid;
     }
 
     function getInvoice($id) {
