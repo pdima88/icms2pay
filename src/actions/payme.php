@@ -7,6 +7,9 @@ use pdima88\icms2ext\Table;
 use Exception;
 use fieldString;
 use fieldCheckbox;
+use cmsConfig;
+use cmsCore;
+use cmsUser;
 /**
  * @property modelPay $model;
  */

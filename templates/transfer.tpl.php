@@ -2,7 +2,7 @@
 use pdima88\icms2ext\Format;
 
 /**
- * @var payInvoice $invoice
+ * @var \pdima88\icms2pay\tables\row_invoice $invoice
  */
 
 $t = new \pdima88\icms2ext\Translate('pay:transfer_');
@@ -21,8 +21,9 @@ $t = new \pdima88\icms2ext\Translate('pay:transfer_');
 
             <div style="margin-left: 200px; font-size: 14pt">
                 <?php t_('pay_invoice:right1', $invoice->order_id, format_date($invoice->date_created),
-                    $transfer['receiver'], $transfer['address'], $transfer['phone'], $transfer['account'],
-                    $transfer['bank'], $transfer['mfo'], $transfer['inn'], $transfer['oked']
+                    $transfer['receiver'] ?? '', $transfer['address'] ?? '', $transfer['phone'] ?? '',
+                    $transfer['account'] ?? '',
+                    $transfer['bank'] ?? '', $transfer['mfo'] ?? '', $transfer['inn'] ?? '', $transfer['oked'] ?? ''
                     ); ?>
                 <h2>СЧЕТ НА ОПЛАТУ № %s</h2>
                 <h3>от %sг.</h3>
@@ -82,9 +83,9 @@ $t = new \pdima88\icms2ext\Translate('pay:transfer_');
                 </tr>
                 <tr>
                     <td>1</td>
-                    <td>&PRODUCT_TITLE;</td>
-                    <td><!--#t id="pay_invoice:valut" s="сум."--></td>
-                    <td style="white-space: nowrap;">&PRICE;</td>
+                    <td><?= $invoice->title ?></td>
+                    <td>сум</td>
+                    <td style="white-space: nowrap;"><?= $invoice->amount ?></td>
                 </tr>
                 <tr>
                     <td colspan="4">
@@ -116,7 +117,7 @@ $t = new \pdima88\icms2ext\Translate('pay:transfer_');
                         <img src="/files/bir.uz/images/payment-btns/sign2.jpg" width="350" class="hidden_print">
                     </td>
                     <td style="text-align: right">
-                        <?= $transfer['chief'] ?>
+                        <?= $transfer['chief'] ?? '' ?>
                     </td>
                 </tr>
             </table>
@@ -124,22 +125,9 @@ $t = new \pdima88\icms2ext\Translate('pay:transfer_');
             <br>
 
             <div class="text-center no_print">
-                <button class="orange-btn" onclick="print()"><!--#t id="pay_receipt:print" s="Распечатать"--></button>
+                <button class="orange-btn" onclick="print()">Распечатать</button>
             </div>
 
             <br>
 
         </div>
-    </div>
-</div>
-<!--#else-->
-<div class="container">
-    <div class="content">
-        <h2><!--#t id="error" s="Ошибка"--></h2>
-    </div>
-</div>
-<!--#endfor-->
-
-<!--#end-->
-
-<!--#include tpl="blocks/bottom" -->

@@ -91,6 +91,8 @@ class row_invoice extends Zend_Db_Table_Row_Abstract {
  * @method row_invoice createRow(array $data = [], $defaultSource = null)
  */
 class table_invoices extends Table {
+    const STATUS_CANCELLED = 3;
+
     protected $_name = 'pay_invoices';
 
     protected $_rowClass = __NAMESPACE__.'\\row_invoice';
