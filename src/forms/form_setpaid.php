@@ -3,33 +3,32 @@
 namespace pdima88\icms2pay\forms;
 
 use fieldDate;
-use fieldString;
-use fieldCheckbox;
-use fieldNumber;
+use fieldText;
 use fieldList;
-use fieldListGroups;
-use cmsCore;
 use cmsForm;
-use pdima88\icms2pay\frontend;
+use pdima88\icms2pay\frontend as pay;
 
 class form_setpaid extends cmsForm {
 
     public function init(){
 
         $form = [
-            [
+            'basic' => [
                 'type' => 'fieldset',
                 'title' => 'Общие настройки',
                 'childs' => [
                     new fieldList('pay_type', [
                         'title' => 'Тип оплаты',
-                        'items' => frontend::getInstance()->getPayTypeList(false),
+                        'items' => pay::getInstance()->getPayTypeList(false),
                     ]),
 
                     new fieldDate('date_paid', [
                         'title' => 'Дата/время оплаты',
-                        'default' => 'current'
-                    ])
+                        'default' => now(),
+                        'options' => [
+                            'show_time' => true
+                        ]
+                    ]),
 
                     new fieldText('pay_info', [
                         'title' => 'Сведения об оплате',
@@ -37,41 +36,13 @@ class form_setpaid extends cmsForm {
                             ['required']
                         ]
                     ]),
+                ]
 
+            ]
 
+        ];
 
-                    new fieldList('payments_list_style', array(
-                        'title' => 'Шаблон выбора системы оплаты',
-                        'items' => array(
-                            'basic' => 'Список кнопок',
-                            'default' => 'Кнопка оплатить с выбором',
-                        )
-                    )),
-
-                    new fieldListGroups('invoice_access', array(
-                        'title' => 'Доступ к управлению счетами',
-
-                    ))
-                )
-
-            )
-
-        );
-
-        $paySystemOptions = [];
-        $paySystemSortOrder = [];
-
-
-
-            }
-        }
-
-        asort($paySystemSortOrder);
-        foreach ($paySystemSortOrder as $paySystem => $sortOrder) {
-            $options[] = $paySystemOptions[$paySystem];
-        }
-
-        return $options;
+        return $form;
 
     }
 

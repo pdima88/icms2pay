@@ -103,12 +103,17 @@ class frontend extends cmsFrontend {
         if (!$invoice) cmsCore::error404();
         $tpl = cmsTemplate::getInstance();
         $form = false;
+        $item = [];
+        $errors = [];
         if ($invoice->status == table_invoices::STATUS_UNPAID) {
             $form = $this->getForm('setpaid');
+            
         }
-        return $tpl->render('setpaid', array(
+        return $tpl->render('setpaid', [
             'form' => $form,
-        ));
+            'item' => $item,
+            'errors' => $errors,
+        ]);
     }
 
     public function getInvoicesGrid() {
