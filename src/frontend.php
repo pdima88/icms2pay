@@ -7,14 +7,12 @@ use cmsFrontend;
 use cmsUser;
 use cmsTemplate;
 use cmsCore;
-use pdima88\icms2pay\model;
-use pdima88\icms2ext\Table;
+use pdima88\icms2pay\model as modelPay;
 use pdima88\icms2ext\GridHelper;
 use pdima88\icms2pay\tables\table_invoices;
 
 /**
- * Class pay
- * @property model $model
+ * @property modelPay $model
  */
 class frontend extends cmsFrontend {
 
@@ -62,13 +60,10 @@ class frontend extends cmsFrontend {
 
         $payType = $invoice->pay_type;
 
-            cmsTemplate::getInstance()->render('pay', [
-                'payTypes' => $payTypes,
-                'invoice' => $invoice
-            ]);
-        //} else {
-        //    $this->redirectToAction($payType, ['payment', $id]);
-        //}
+        cmsTemplate::getInstance()->render('pay', [
+            'payTypes' => $payTypes,
+            'invoice' => $invoice
+        ]);
     }
 
     public function actionReset($invoiceId) {
@@ -77,8 +72,6 @@ class frontend extends cmsFrontend {
         $invoice->save();
 
         $this->redirectToAction('pay', $invoiceId);
-
-
     }
     
     public function actionAdmin() {
@@ -104,8 +97,18 @@ class frontend extends cmsFrontend {
         ));
     }
 
-    public function setPaid() {
+    public function actionSetPaid($invoice_id) {
         if (!cmsUser::isAllowed('pay','admin')) cmsCore::error404();
+        $invoice = table_invoices::getById($invoice_id);
+        if (!$invoice) cmsCore::error404();
+        $tpl = cmsTemplate::getInstance();
+        $form = false;
+        if ($invoice->status == table_invoices::STATUS_UNPAID) {
+            $form = $this->getForm('setpaid');
+        }
+        return $tpl->render('setpaid', array(
+            'form' => $form,
+        ));
     }
 
     public function getInvoicesGrid() {
@@ -137,8 +140,8 @@ class frontend extends cmsFrontend {
             'ajax' => cmsCore::getInstance()->uri_absolute,
             'actions' => GridHelper::getActions([
                     'edit' => [
-                        'title' => 'Изменить',
-                        'href'  => href_to('admin', 'controllers', ['edit', 'pay', 'tariffs_edit', '{id}']) . '?back={returnUrl}'
+                        'title' => 'Внести сведения об оплате',
+                        'href'  => href_to('pay', 'setpaid', ['{id}']) . '?back={returnUrl}'
                     ],
                     'delete' => [
                         'title' => 'Удалить',
@@ -146,7 +149,7 @@ class frontend extends cmsFrontend {
                         'confirmDelete' => true,
                     ]
             ]),
-            'delete' => href_to('admin', 'controllers', ['edit', 'pay', 'tariffs_delete', '{id}']). '?back={returnUrl}',
+            'delete' => href_to('pay', 'delete', ['{id}']). '?back={returnUrl}',
             'columns' => [
                 'id' => [
                     'title' => '№ счета',
