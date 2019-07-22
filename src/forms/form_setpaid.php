@@ -19,7 +19,11 @@ class form_setpaid extends cmsForm {
                 'childs' => [
                     new fieldList('pay_type', [
                         'title' => 'Тип оплаты',
-                        'items' => pay::getInstance()->getPayTypeList(false),
+                        'items' => [
+                            'manual' => 'Вручную (администратор)',
+                            'receipt' => 'Квитанция в банк',
+                            'transfer' => 'Перечислением'
+                        ],
                     ]),
 
                     new fieldDate('date_paid', [

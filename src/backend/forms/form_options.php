@@ -36,13 +36,13 @@ class form_options extends cmsForm {
                         )
                     )),
 					
-					new fieldList('payments_list_style', array(
+					/*new fieldList('payments_list_style', array(
                         'title' => 'Шаблон выбора системы оплаты',
                         'items' => array(
                             'basic' => 'Список кнопок',
                             'default' => 'Кнопка оплатить с выбором',
                         )
-                    )),
+                    )),*/
 
 					new fieldListGroups('invoice_access', array(
 						'title' => 'Доступ к управлению счетами',

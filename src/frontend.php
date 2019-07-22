@@ -106,8 +106,18 @@ class frontend extends cmsFrontend {
         $item = [];
         $errors = [];
         if ($invoice->status == table_invoices::STATUS_UNPAID) {
+            $item = [
+                'pay_type' => $invoice->pay_type,
+            ];
             $form = $this->getForm('setpaid');
-            
+            if ($this->request->has('submit')) {
+                $item = $form->parse($this->request, true);
+                $errors = $form->validate($this, $item);
+
+                if (!$errors) {
+                    $this->model->setInvoicePaid($invoice_id, $item['pay_info'], $item['pay_type'], cmsUser::getId());
+                }
+            }
         }
         return $tpl->render('setpaid', [
             'form' => $form,
@@ -119,7 +129,7 @@ class frontend extends cmsFrontend {
     public function getInvoicesGrid() {
 
         $statusList = model::$invoiceStatusList;
-        $payTypes = $this->getPayTypeList(false);
+        $payTypes = array_merge(['manual' => 'Вручную (администратор)'], $this->getPayTypeList(false));
 
         $select = $this->model->invoices->selectAs('i')->joinBy(table_invoices::FK_USER, 'u')
             ->columns([
@@ -156,8 +166,8 @@ class frontend extends cmsFrontend {
             ]),
             'delete' => href_to('pay', 'delete', ['{id}']). '?back={returnUrl}',
             'columns' => [
-                'id' => [
-                    'title' => '№ счета',
+                'order_id' => [
+                    'title' => '№ заказа',
                     'width' => 70,
                     'sort' => true,
                     'filter' => 'equal',
