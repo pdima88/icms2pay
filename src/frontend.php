@@ -116,6 +116,8 @@ class frontend extends cmsFrontend {
 
                 if (!$errors) {
                     $this->model->setInvoicePaid($invoice_id, $item['pay_info'], $item['pay_type'], cmsUser::getId());
+                    cmsUser::addSessionMessage('Счет отмечен оплаченным', 'success');
+                    $this->redirectBack();
                 }
             }
         }
